@@ -10,7 +10,7 @@
 # Response: { <guide_json> }
 #
 #
-from flask import Flask
+from flask import Flask, jsonify
 from sqlalchemy import text
 from flask_sqlalchemy import SQLAlchemy
 from guides_sql import CREATE_TABLE, INSERT_VALUES
@@ -37,16 +37,43 @@ class Guide(db.Model):
     company = db.Column(db.Integer)
 
 
+@app.route('/')
+def main_page():
+    return 'Главная страница'
+
+
 @app.route("/guides")
 def get_guides():
     # TODO допишите представления
-    pass
+    records = db.session.query(Guide).all()
+    result = []
+    for record in records:
+        result.append({
+            'id': record.id,
+            'surname': record.surname,
+            'full_name': record.full_name,
+            'tours_count': record.tours_count,
+            'bio': record.bio,
+            'is_pro': record.is_pro,
+            'company': record.company
+        })
+    return jsonify(result)
 
 
 @app.route("/guides/<int:gid>")
 def get_guide(gid):
     # TODO допишите представления
-    pass
+    record = db.session.query(Guide).get(gid)
+    result = {
+        'id': record.id,
+        'surname': record.surname,
+        'full_name': record.full_name,
+        'tours_count': record.tours_count,
+        'bio': record.bio,
+        'is_pro': record.is_pro,
+        'company': record.company
+    }
+    return jsonify(result)
 
 # чтобы увидеть результат работы функций
 # запустите фаил и

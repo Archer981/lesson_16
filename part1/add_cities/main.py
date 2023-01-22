@@ -35,6 +35,15 @@ class City(db.Model):
 
 db.create_all()
 
+city1 = City(id=1, name='Рим', country_ru='Италия', population=28730000)
+city2 = City(id=2, name='Милан', country_ru='Италия', population=1333000)
+city3 = City(id=3, name='Венеция', country_ru='Италия', population=265000)
+city4 = City(id=4, name='Стамбул', country_ru='Турция', population=108950000)
+city5 = City(id=5, name='Кемер', country_ru='Турция', population=22421)
+
+db.session.add_all([city1, city2, city3, city4, city5])
+db.session.commit()
+
 # TODO напишите здесь код с запросом на добавление
 # строк в таблицу
 #

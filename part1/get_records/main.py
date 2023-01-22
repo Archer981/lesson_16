@@ -31,12 +31,12 @@ class User(db.Model):
 
 def get_all():
     # TODO напишите функцию здесь
-    pass
+    return db.session.query(User).all()
 
 
 def get_one(id):
     # TODO напишите функцию здесь
-    pass
+    return db.session.query(User).get(id)
 
 
 # не удаляйте код ниже, он используется для вывода на экран
