@@ -20,6 +20,10 @@ db = SQLAlchemy(app)
 
 class Singer(db.Model):
     __tablename__ = 'singer'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True)
+    age = db.Column(db.Integer, db.CheckConstraint('age < 35'))
+    group = db.Column(db.String(100), nullable=False)
     # TODO напишите поля для модели Singer
 
 

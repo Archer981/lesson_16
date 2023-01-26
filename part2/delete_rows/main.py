@@ -4,7 +4,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import prettytable
-from sqlalchemy import text
+from sqlalchemy import text, or_
 from guides_sql import CREATE_TABLE, INSERT_VALUES
 
 app = Flask(__name__)
@@ -29,7 +29,8 @@ class Guide(db.Model):
 
 def delete_guides():
     # TODO напишите запрос здесь
-    pass
+    db.session.query(Guide).filter(or_(Guide.id == 1, Guide.id == 4, Guide.id == 7)).delete()
+    db.session.commit()
 
 
 delete_guides()

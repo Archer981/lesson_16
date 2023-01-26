@@ -14,11 +14,20 @@ db: SQLAlchemy = SQLAlchemy(app)
 
 class Author(db.Model):
     __tablename__ = "author"
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    books = db.relationship('Book')
     # TODO добавьте поля модели здесь
 
 
 class Book(db.Model):
     __tablename__ = "book"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(500))
+    copyright = db.Column(db.Integer)
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
+    author = db.relationship('Author')
     # TODO добавьте поля модели здесь
 
 # Не удаляйте код ниже, он нужен для корректного

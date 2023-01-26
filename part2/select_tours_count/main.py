@@ -29,8 +29,11 @@ class Guide(db.Model):
 
 
 def do_request():
+    # with db.session.begin():
+    result = db.session.query(Guide).filter(Guide.tours_count > 3).all()
+    return result
     # TODO напишите запрос здесь
-    pass
+
 
 # не удаляйте код ниже, он необходим
 # для выдачи результата запроса

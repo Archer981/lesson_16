@@ -13,11 +13,20 @@ db: SQLAlchemy = SQLAlchemy(app)
 
 class Guide(db.Model):
     __tablename__ = 'guide'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    main_speciality = db.Column(db.String(100))
+    country = db.Column(db.String(50))
+    excursions = db.relationship('Excursion')
     # TODO добавьте поля модели здесь
 
 
 class Excursion(db.Model):
     __tablename__ = 'excursion'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    guide_id = db.Column(db.Integer, db.ForeignKey('guide.id'))
+    guide = db.relationship('Guide')
     # TODO добавьте поля модели здесь
 
 # Не удаляйте код ниже, он нужен для корректного

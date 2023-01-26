@@ -44,10 +44,23 @@
     # возвращались гиды с нужным количеством туров.
 """
 
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from guides_sql import CREATE_TABLE, INSERT_VALUES
+
+
+def convert_to_dict(convert):
+    return {
+        "id": convert.id,
+        "surname": convert.surname,
+        "full_name": convert.full_name,
+        "tours_count": convert.tours_count,
+        "bio": convert.bio,
+        "is_pro": convert.is_pro,
+        "company": convert.company
+    }
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
@@ -71,6 +84,48 @@ class Guide(db.Model):
     company = db.Column(db.Integer)
 
 # TODO напишите роуты здесь
+
+
+@app.get('/')
+def main_page():
+    return 'Главная страница'
+
+
+@app.route('/guides', methods=['POST', 'GET'])
+def all_guides_page():
+    if request.method == 'POST':
+        new_guide = Guide(
+        surname=request.form.get('surname'),
+        full_name=request.form.get('full_name'),
+        tours_count=request.form.get('tours_count'),
+        bio=request.form.get('bio'),
+        is_pro=request.form.get('is_pro'),
+        company=request.form.get('company')
+        )
+        db.session.add(new_guide)
+        db.commit()
+        return 'Новый гид добавлен'
+    tours_count = request.args.get('tours_count')
+    result = []
+    if tours_count:
+        for guide in db.session.query(Guide).filter(Guide.tours_count == tours_count).all():
+            result.append(convert_to_dict(guide))
+    else:
+        for guide in db.session.query(Guide).all():
+            result.append(convert_to_dict(guide))
+    return jsonify(result)
+
+
+@app.get('/guides/<int:id>')
+def guide_page(id):
+    return jsonify(convert_to_dict(db.session.query(Guide).get(id)))
+
+
+@app.get('/guides/<int:id>/delete')
+def guide_delete(id):
+    db.session.query(Guide).filter(Guide.id == id).delete()
+    db.session.commit()
+    return 'Удалено'
 
 
 if __name__ == "__main__":
