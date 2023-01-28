@@ -48,6 +48,7 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from guides_sql import CREATE_TABLE, INSERT_VALUES
+from distutils.util import strtobool
 
 
 def convert_to_dict(convert):
@@ -95,15 +96,16 @@ def main_page():
 def all_guides_page():
     if request.method == 'POST':
         new_guide = Guide(
-        surname=request.form.get('surname'),
-        full_name=request.form.get('full_name'),
-        tours_count=request.form.get('tours_count'),
-        bio=request.form.get('bio'),
-        is_pro=request.form.get('is_pro'),
-        company=request.form.get('company')
+        surname=request.values.get('surname'),
+        full_name=request.values.get('full_name'),
+        tours_count=request.values.get('tours_count'),
+        bio=request.values.get('bio'),
+        is_pro=strtobool(request.values.get('is_pro').lower()),
+        company=request.values.get('company')
         )
+        print(request.values.get('surname'))
         db.session.add(new_guide)
-        db.commit()
+        db.session.commit()
         return 'Новый гид добавлен'
     tours_count = request.args.get('tours_count')
     result = []
